@@ -45,5 +45,18 @@ namespace MongoDb.Services
 
             await collection.DeleteOneAsync(x => x.UserId == UserId);
         }
+
+        public static async ValueTask DeleteRangeAsync(List<string> usersIds,string collectionName)
+        {
+            MongoClient client = new MongoClient(connectionString);
+            var db = client.GetDatabase(databaseName);
+            var collection = db.GetCollection<User>(collectionName);
+
+            foreach(var i in usersIds)
+            {
+                await collection.DeleteOneAsync(x => x.UserId == i);
+            }
+        }
+
     }
 }
