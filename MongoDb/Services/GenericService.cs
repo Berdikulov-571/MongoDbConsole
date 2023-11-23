@@ -58,5 +58,13 @@ namespace MongoDb.Services
             }
         }
 
+        public static async ValueTask UpdateAsync(string userId, UpdateDefinition<User> newUser,string collectionName)
+        {
+            MongoClient client = new MongoClient(connectionString);
+            var db = client.GetDatabase(databaseName);
+            var collection = db.GetCollection<User>(collectionName);
+
+            await collection.UpdateOneAsync(x => x.UserId == userId,newUser);
+        }
     }
 }
