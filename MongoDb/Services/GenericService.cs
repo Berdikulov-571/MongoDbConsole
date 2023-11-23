@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using MongoDb.Models;
+using MongoDB.Driver;
 
 namespace MongoDb.Services
 {
@@ -18,7 +19,7 @@ namespace MongoDb.Services
             return result;
         }
 
-        public static async ValueTask CreateAsync<T>(T model,string collectionName)
+        public static async ValueTask CreateAsync<T>(T model, string collectionName)
         {
             MongoClient client = new MongoClient(connectionString);
             var db = client.GetDatabase(databaseName);
@@ -27,13 +28,22 @@ namespace MongoDb.Services
             await collection.InsertOneAsync(model);
         }
 
-        public static async ValueTask CreateRangeAsync<T>(List<T> models,string collectionName)
+        public static async ValueTask CreateRangeAsync<T>(List<T> models, string collectionName)
         {
             MongoClient client = new MongoClient(connectionString);
             var db = client.GetDatabase(databaseName);
             var collection = db.GetCollection<T>(collectionName);
 
             await collection.InsertManyAsync(models);
+        }
+
+        public static async ValueTask DeleteAsync(string UserId, string collectionName)
+        {
+            MongoClient client = new MongoClient(connectionString);
+            var db = client.GetDatabase(databaseName);
+            var collection = db.GetCollection<User>(collectionName);
+
+            await collection.DeleteOneAsync(x => x.UserId == UserId);
         }
     }
 }
