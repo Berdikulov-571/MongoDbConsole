@@ -26,5 +26,14 @@ namespace MongoDb.Services
 
             await collection.InsertOneAsync(model);
         }
+
+        public static async ValueTask CreateRangeAsync<T>(List<T> models,string collectionName)
+        {
+            MongoClient client = new MongoClient(connectionString);
+            var db = client.GetDatabase(databaseName);
+            var collection = db.GetCollection<T>(collectionName);
+
+            await collection.InsertManyAsync(models);
+        }
     }
 }
